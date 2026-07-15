@@ -1,4 +1,4 @@
-# ai-skills
+# agent-skills
 
 Personal Pi coding-agent skills.
 
