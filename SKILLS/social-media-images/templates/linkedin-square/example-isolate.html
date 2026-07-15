@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tailwind Isolate LinkedIn Image</title>
+  <link rel="stylesheet" href="./template.css" />
+</head>
+<body>
+  <main class="canvas">
+    <div class="grid"></div>
+    <section class="content">
+      <h1 class="headline"><span class="accent">Tailwind:</span> Stacking Context,<br />On Purpose</h1>
+
+      <div class="editor" aria-label="Code editor showing Tailwind isolate markup">
+        <div class="topbar">
+          <span class="dot red"></span>
+          <span class="dot amber"></span>
+          <span class="dot green"></span>
+          <span class="filename">component.html</span>
+        </div>
+        <div class="code-area">
+          <div class="line-gutter">
+            <span class="ln">1</span>
+            <span class="ln">2</span>
+            <span class="ln">3</span>
+            <span class="ln">4</span>
+            <span class="ln">5</span>
+          </div>
+          <div class="code-block">
+            <span class="code-label">isolate</span>
+            <span class="code-line"><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"relative <span class="iso">isolate</span>"</span><span class="tag">&gt;</span></span>
+            <span class="code-line"><span class="indent"></span><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"absolute <span class="z">z-10</span>"</span><span class="tag">&gt;</span><span class="text-node">Badge</span><span class="tag">&lt;/div&gt;</span></span>
+            <span class="code-line"><span class="indent"></span><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"relative <span class="z">z-20</span>"</span><span class="tag">&gt;</span><span class="text-node">Card content</span><span class="tag">&lt;/div&gt;</span></span>
+            <span class="code-line"><span class="indent"></span><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"absolute <span class="z">z-30</span>"</span><span class="tag">&gt;</span><span class="text-node">Dropdown</span><span class="tag">&lt;/div&gt;</span></span>
+            <span class="code-line"><span class="tag">&lt;/div&gt;</span></span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="bullets">
+        <li><span class="bullet-dot"></span><span>Creates a clean <span class="blue">stacking context</span></span></li>
+        <li><span class="bullet-dot"></span><span>Keeps child z-index values <span class="highlight">scoped</span></span></li>
+        <li><span class="bullet-dot"></span><span>Prevents outside layer fights</span></li>
+        <li><span class="bullet-dot"></span><span>Replaces magic <span class="highlight">z-[9999]</span> fixes</span></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

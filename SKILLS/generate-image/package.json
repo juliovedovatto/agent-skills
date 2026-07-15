@@ -1,0 +1,9 @@
+{
+  "name": "generate-image-skill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "replicate": "^1.0.1"
+  }
+}

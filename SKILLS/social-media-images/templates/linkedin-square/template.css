@@ -1,0 +1,266 @@
+/* LinkedIn square deterministic image template
+   Palette-only colors from the social-media-images skill:
+   #F8FAFC, #111827, #FFFFFF, #2563EB, #F97316, #FACC15, #64748B
+   Alpha variants of those palette colors are allowed for shadows/gradients. */
+
+:root {
+  --slate-50: #F8FAFC;
+  --slate-900: #111827;
+  --white: #FFFFFF;
+  --blue: #2563EB;
+  --orange: #F97316;
+  --yellow: #FACC15;
+  --muted: #64748B;
+}
+
+html[data-theme="dark"] {
+  --page-bg: var(--slate-900);
+  --page-bg-2: var(--slate-900);
+  --panel-bg: rgba(17, 24, 39, 0.96);
+  --panel-bar: rgba(17, 24, 39, 0.96);
+  --text: var(--white);
+  --soft-text: var(--muted);
+  --border: rgba(100, 116, 139, 0.45);
+  --grid-line: rgba(100, 116, 139, 0.18);
+  --blue-soft: rgba(37, 99, 235, 0.22);
+  --orange-soft: rgba(249, 115, 22, 0.18);
+  --code-text: var(--white);
+  --code-tag: var(--blue);
+  --code-attr: var(--blue);
+  --label-bg: var(--slate-900);
+}
+
+html[data-theme="light"] {
+  --page-bg: var(--slate-50);
+  --page-bg-2: var(--white);
+  --panel-bg: rgba(255, 255, 255, 0.96);
+  --panel-bar: rgba(248, 250, 252, 0.96);
+  --text: var(--slate-900);
+  --soft-text: var(--muted);
+  --border: rgba(100, 116, 139, 0.32);
+  --grid-line: rgba(100, 116, 139, 0.16);
+  --blue-soft: rgba(37, 99, 235, 0.13);
+  --orange-soft: rgba(249, 115, 22, 0.11);
+  --code-text: var(--slate-900);
+  --code-tag: var(--blue);
+  --code-attr: var(--blue);
+  --label-bg: var(--white);
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  width: 1080px;
+  height: 1080px;
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, var(--blue-soft), transparent 34%),
+    radial-gradient(circle at 92% 78%, var(--orange-soft), transparent 30%),
+    linear-gradient(135deg, var(--page-bg) 0%, var(--page-bg-2) 100%);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: grid;
+  place-items: center;
+}
+
+.canvas {
+  width: 1080px;
+  height: 1080px;
+  padding: 70px 72px 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: radial-gradient(circle at center, black, transparent 78%);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  min-height: 946px;
+}
+
+.headline {
+  margin: 0 0 52px;
+  color: var(--text);
+  font-size: 54px;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  font-weight: 820;
+  max-width: 930px;
+}
+
+.headline .accent {
+  color: var(--orange);
+  display: inline-block;
+  margin-right: 0.18em;
+}
+
+.editor {
+  width: 936px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--panel-bg);
+  box-shadow: 0 34px 90px rgba(17, 24, 39, 0.24), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.topbar {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
+  background: var(--panel-bar);
+  border-bottom: 1px solid var(--border);
+}
+
+.dot { width: 16px; height: 16px; border-radius: 50%; }
+.dot.red { background: var(--orange); }
+.dot.amber { background: var(--yellow); }
+.dot.green { background: var(--blue); }
+
+.filename {
+  margin-left: auto;
+  color: var(--soft-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 18px;
+}
+
+.code-area {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  padding: 34px 30px 34px 0;
+  font: 500 29px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  letter-spacing: -0.045em;
+}
+
+.line-gutter {
+  text-align: right;
+  padding-right: 28px;
+  padding-top: 15px;
+  user-select: none;
+  color: var(--soft-text);
+}
+
+.line-gutter .ln {
+  display: block;
+  min-height: 47px;
+}
+
+.code-block {
+  position: relative;
+  border: 3px dashed var(--blue);
+  border-radius: 14px;
+  padding: 12px 20px;
+  box-shadow: 0 0 28px rgba(37, 99, 235, 0.18);
+}
+
+.code-label {
+  position: absolute;
+  right: 28px;
+  top: -17px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: var(--orange);
+  background: var(--label-bg);
+  border: 1px solid rgba(249, 115, 22, 0.5);
+  font: 700 20px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.03em;
+}
+
+.code-line {
+  display: block;
+  min-height: 47px;
+  color: var(--code-text);
+  white-space: pre;
+}
+
+.tag { color: var(--code-tag); }
+.attr { color: var(--code-attr); }
+.str { color: var(--code-text); }
+.iso,
+.highlight { color: var(--orange); font-weight: 800; }
+.z { color: var(--yellow); font-weight: 700; }
+.text-node { color: var(--code-text); }
+.indent { display: inline-block; width: 38px; }
+.blue { color: var(--code-tag); font-weight: 700; }
+
+.bullets {
+  margin: 54px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 22px;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.bullets li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: start;
+  gap: 20px;
+}
+
+.bullet-dot {
+  width: 12px;
+  height: 12px;
+  margin-top: 13px;
+  border-radius: 999px;
+  background: var(--yellow);
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.45);
+}
+
+.pagination {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--soft-text);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pagination-count {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-bg);
+  color: var(--text);
+}
+
+.pagination-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--muted);
+  opacity: 0.45;
+}
+
+.pagination-dot.is-active {
+  width: 28px;
+  background: var(--blue);
+  opacity: 1;
+}
