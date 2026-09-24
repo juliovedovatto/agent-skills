@@ -1,3 +1,4 @@
 .DS_Store
 **/node_modules/
 **/.last-generation.json
+**/writing-style-database.csv
