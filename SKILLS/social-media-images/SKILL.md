@@ -90,15 +90,21 @@ Available LinkedIn square templates live in:
 
 ```text
 {skillDir}/templates/linkedin-square/
-├── template.html        # reusable base template
-├── template.css         # shared light/dark styles
-└── example-isolate.html # populated example/proof
+├── template.html            # reusable base template (Blue/Orange, dark/light)
+├── template.css             # shared Blue/Orange light/dark styles
+├── example-isolate.html     # populated example/proof (Blue/Orange)
+├── tokens-hallmark.css      # OKLCH color schemes for the Hallmark themes
+├── template-hallmark.css    # shared Hallmark layout (modern-minimal)
+├── template-cobalt.html     # Hallmark theme — cool (data-theme="cobalt")
+└── template-warm.html       # Hallmark theme — warm (data-theme="warm")
 ```
+
+Two additional **Hallmark** themes (modern-minimal, OKLCH tokens, Google Fonts — Space Grotesk / Inter / JetBrains Mono) are available as alternative color schemes: `template-cobalt.html` (`data-theme="cobalt"`, cool cobalt-on-near-white) and `template-warm.html` (`data-theme="warm"`, warm coral-on-cream). Their OKLCH palettes live in `tokens-hallmark.css`; they do **not** use the skill palette below. Use the same render workflow as the base templates.
 
 Template rules:
 
 - Use `data-theme="dark"` or `data-theme="light"` on the `<html>` element.
-- Use only the skill palette colors and alpha variants:
+- For the base `template.html` / `template.css`, use only the skill palette colors and alpha variants:
   - `#F8FAFC`
   - `#111827`
   - `#FFFFFF`
@@ -106,6 +112,7 @@ Template rules:
   - `#F97316`
   - `#FACC15`
   - `#64748B`
+- The Hallmark themes (`template-cobalt.html` / `template-warm.html`) use their own OKLCH palettes from `tokens-hallmark.css` instead — do not mix in the hex palette above.
 - For carousel images, keep the `<!-- PAGINATION START -->` block.
 - For single-image posts, remove the pagination block.
 - Edit content directly in HTML: headline, code lines, line numbers, bullets, filename, and labels.

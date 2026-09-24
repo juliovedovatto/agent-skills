@@ -1,0 +1,98 @@
+/* Hallmark · macrostructure: poster/code-hero · genre: modern-minimal
+ * variant A: cobalt (cool) · variant B: warm (warm)
+ * axes differ: paper band (cool vs warm) + accent hue (blue vs coral)
+ * pre-emit critique: P5 H4 E5 S4 R5 V5
+ */
+
+:root {
+  /* spacing — 4pt scale */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 80px;
+
+  /* type scale (fixed 1080 canvas, px) */
+  --text-display: 54px;
+  --text-body: 31px;
+  --text-code: 29px;
+  --text-meta: 18px;
+  --text-label: 20px;
+  --text-count: 17px;
+
+  /* easings */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* rule weights */
+  --rule: 1px;
+}
+
+/* ---------- Variant A — Cobalt (cool dev-tool) ---------- */
+html[data-theme="cobalt"] {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-paper: oklch(98.5% 0.004 250);
+  --color-ink: oklch(24% 0.02 258);
+  --color-ink-2: oklch(34% 0.018 257);
+  --color-soft: oklch(52% 0.02 257);
+  --color-accent: oklch(58% 0.20 256);
+  --color-accent-ink: oklch(99% 0.004 250);
+  --color-rule: oklch(91% 0.004 252);
+  --color-rule-2: oklch(30% 0.02 258);
+
+  --color-graphite: oklch(22% 0.016 260);
+  --color-graphite-ink: oklch(92% 0.005 255);
+  --color-graphite-soft: oklch(60% 0.012 257);
+  --color-graphite-rule: oklch(32% 0.015 258);
+  --color-topbar: oklch(20% 0.014 258);
+
+  --code-tag: oklch(72% 0.16 256);
+  --code-attr: oklch(72% 0.16 256);
+  --code-str: var(--color-graphite-ink);
+  --code-emph: oklch(78% 0.18 256);
+  --code-z: oklch(82% 0.13 85);
+  --code-key: oklch(72% 0.16 256);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --focus: oklch(58% 0.20 256);
+}
+
+/* ---------- Variant B — Warm minimal ---------- */
+html[data-theme="warm"] {
+  --font-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-paper: oklch(97% 0.008 70);
+  --color-ink: oklch(26% 0.015 60);
+  --color-ink-2: oklch(36% 0.012 60);
+  --color-soft: oklch(50% 0.012 60);
+  --color-accent: oklch(61% 0.19 28);
+  --color-accent-ink: oklch(99% 0.005 70);
+  --color-rule: oklch(90% 0.006 65);
+  --color-rule-2: oklch(30% 0.012 60);
+
+  --color-graphite: oklch(24% 0.012 55);
+  --color-graphite-ink: oklch(92% 0.006 65);
+  --color-graphite-soft: oklch(62% 0.01 60);
+  --color-graphite-rule: oklch(34% 0.012 55);
+  --color-topbar: oklch(22% 0.012 55);
+
+  --code-tag: oklch(76% 0.15 30);
+  --code-attr: oklch(76% 0.15 30);
+  --code-str: var(--color-graphite-ink);
+  --code-emph: oklch(80% 0.16 30);
+  --code-z: oklch(82% 0.14 75);
+  --code-key: oklch(76% 0.15 30);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --focus: oklch(61% 0.19 28);
+}
