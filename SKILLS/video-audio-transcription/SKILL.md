@@ -1,6 +1,6 @@
 ---
 name: video-audio-transcription
-description: Extract text/transcription from local video and audio files. Use when the user asks to transcribe, caption, or extract spoken text from a local media file. Falls back from Gemini video analysis to macOS Speech to local Whisper backends.
+description: Extract text/transcription from local video and audio files. Use when the user asks to transcribe, caption, or extract spoken text from a local media file. Transcribes locally with a Whisper backend (mlx_whisper by default on macOS).
 ---
 
 # video-audio-transcription
@@ -9,9 +9,9 @@ Extract spoken text from local video or audio files.
 
 ## Failure Policy
 
-Follow only the documented fallback order.
+Follow only the documented method.
 
-If the primary method and all applicable fallbacks fail, stop. Do not retry failed steps with different arguments, search for alternatives, install tools, call other APIs, write ad-hoc scripts, or ask the user to brainstorm workarounds.
+If it fails, stop. Do not retry failed steps with different arguments, search for alternatives, install tools, call other APIs, write ad-hoc scripts, or ask the user to brainstorm workarounds.
 
 Report:
 1. every method attempted
@@ -20,37 +20,10 @@ Report:
 
 Continue only after explicit user approval.
 
-## Fallback Order
-
-Use this order strictly:
-
-1. `fetch_content` video analysis
-2. `macos-speech-transcribe.swift`
-3. `local-whisper-transcribe.sh`
-
-`extract-audio.sh` is only a helper for documented backends. It is not an independent fallback.
-
-If all applicable steps fail, stop and report the failure.
-
 ## Workflow
 
-1. **Gemini video analysis**
-   Try Pi `fetch_content` with the video file path and a transcription prompt. This requires Gemini access (cookie or API key). If it succeeds, return the result.
-
-2. **macOS Speech**
-   If step 1 fails, and the machine is macOS with Speech recognition authorized, run:
-   ```bash
-   scripts/macos-speech-transcribe.swift <video-or-audio-path> [locale] [timeout-seconds]
-   ```
-   - Default locale: `pt_BR`
-   - Default timeout: `180` seconds
-   - Exit codes:
-     - `0`: success, transcript printed between `TRANSCRIPT_BEGIN` and `TRANSCRIPT_END`
-     - `1`: error (not authorized, recognizer unavailable, timeout, file not found)
-   - If the requested locale is unavailable, the script prints a `WARNING:` and falls back to the default recognizer.
-
-3. **Local Whisper backend**
-   If step 2 fails or is unavailable, run:
+1. **Local Whisper backend — macOS default**
+   Run:
    ```bash
    scripts/local-whisper-transcribe.sh <video-or-audio-path> [language]
    ```
@@ -63,6 +36,7 @@ If all applicable steps fail, stop and report the failure.
      - `WHISPER_MODEL_DOWNLOAD_APPROVAL_REQUIRED`: backend found but auto-download is blocked
      - `WHISPER_CPP_MODEL_PATH_REQUIRED`: whisper.cpp found but `WHISPER_CPP_MODEL` is not set
 
+   - On macOS the default backend is `mlx_whisper`. When it is missing, ask the user to approve `uv tool install mlx-whisper`; the first run also downloads the model (~1.6 GB) and needs `VIDEO_TRANSCRIPTION_ALLOW_MODEL_DOWNLOAD=1`.
 ## Audio extraction helper
 
 Some backends need a normalized audio file. Use:
@@ -74,13 +48,19 @@ Defaults to writing `~/tmp/.pi/<basename>.wav` (mono, 16 kHz, WAV).
 
 ## Environment variables
 
-- To allow model downloads for auto-download backends (`faster-whisper`, `whisper`, `mlx_whisper`), set:
+- macOS: `mlx_whisper` auto-downloads its model on first run. Approve it with:
   ```bash
   export VIDEO_TRANSCRIPTION_ALLOW_MODEL_DOWNLOAD=1
   ```
-- For whisper.cpp backends (`whisper-cli`, `main`), set a local model path:
+- Linux: `whisper-cli` (whisper.cpp) needs a local model already on disk:
   ```bash
   export WHISPER_CPP_MODEL=/path/to/ggml-model.bin
+  ```
+- The `mlx_whisper` backend pins `mlx-community/whisper-large-v3-turbo` by default,
+  because mlx_whisper's own default (`tiny`) is too weak to be useful. Override with
+  `WHISPER_MLX_MODEL`:
+  ```bash
+  export WHISPER_MLX_MODEL=mlx-community/whisper-large-v3
   ```
 
 ## Validation
@@ -97,15 +77,7 @@ scripts/local-whisper-transcribe.sh
 scripts/local-whisper-transcribe.sh /nonexistent/file.mp4
 # Expected: ERROR: Input file not found, exits 1
 
-# 4. Check swift typecheck
-swift -typecheck scripts/macos-speech-transcribe.swift
-# Expected: no output on success
-
-# 5. Check swift executable bit
-[[ -x scripts/macos-speech-transcribe.swift ]] && echo "executable" || echo "not executable"
-# Expected: executable
-
-# 6. Check extract-audio.sh usage (no args)
+# 4. Check extract-audio.sh usage (no args)
 scripts/extract-audio.sh
 # Expected: prints usage, exits 1
 ```
