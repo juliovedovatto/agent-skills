@@ -1,29 +1,33 @@
 ---
 name: witan
-description: convene a council of N oracle subagents to advise on a single subject, each running on a distinct model — the oracle agent's main model plus each of its configured fallback models. Use when you want several independent model perspectives on a decision, question, or direction instead of one. Trigger phrasings include ask the council, convene the witan, ask the wise men, get multiple oracle opinions, what do the oracles think.
+description: convene a council of N oracle subagents to advise on a single subject, each running on a distinct model — the oracle agent's primary model plus its additional council models. Use when you want several independent model perspectives on a decision, question, or direction instead of one. Trigger phrasings include ask the council, convene the witan, ask the wise men, get multiple oracle opinions, what do the oracles think.
 ---
 
 # Witan
 
 The witan (Old English: *wītan*, "wise men") was the king's council in Anglo-Saxon England from before the 7th century until the 11th century. This skill convenes a council of N `oracle` subagents — one per distinct model available to the oracle agent — so a subject is weighed by multiple independent model perspectives in parallel.
 
-**N is dynamic:** it equals the number of distinct models the `oracle` agent can use — its main model plus each configured fallback model. If the oracle's model pool changes, N auto-adjusts.
+**N is dynamic:** the pool is the oracle agent's primary model (from its agent config) plus the additional models declared in step 1. If either changes, N adjusts.
 
 ## Before you run — confirm intent
 
-Spawning the witan runs N oracles in parallel (N× the cost and time of a single oracle). Before convening the council, **confirm with the user that they really want it** unless the invocation was explicit (e.g. `/skill:witan ...`, "use the witan skill", "convene the witan on ..."). A brief one-line check is enough: "Convene the witan (3 oracles: deepseek-v4-pro, minimax-m2.7, qwen3.5) on this?" Proceed only after a yes.
+Spawning the witan runs N oracles in parallel (N× the cost and time of a single oracle). Before convening the council, **confirm with the user that they really want it** unless the invocation was explicit (e.g. `/skill:witan ...`, "use the witan skill", "convene the witan on ..."). A brief one-line check is enough: "Convene the witan (N oracles: <primary> + <additional models>) on this?" Proceed only after a yes.
 
 ## How to run
 
 ### 1. Discover the model pool
 
-Read the oracle agent's config:
+pi-subagents no longer carries per-agent fallback model config, so the pool comes from two sources:
+
+1. **Primary model** — read the oracle agent's config and take its `Model:` field:
 
 ```typescript
 subagent({ action: "get", agent: "oracle" })
 ```
 
-Parse the `Model:` field (main model) and the `Fallback models:` field (comma-separated). Dedupe them. That deduplicated list is your model pool; its length is **N**.
+2. **Additional models** — the `oracle` agent's fallback list, in order.
+
+Pool = primary plus additional models, deduped. Its length is **N**.
 
 ### 2. Convene the council
 
@@ -40,9 +44,10 @@ Spawn N `oracle` subagents in parallel — one task per distinct model — each 
 const advisoryPreamble = "Review only — do not edit any files. Return your verdict as findings only.\n\n";
 subagent({
   tasks: [
-    { agent: "oracle", model: "<main-model>",  task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" } },
-    { agent: "oracle", model: "<fallback-1>",   task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" } },
-    { agent: "oracle", model: "<fallback-2>",   task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" } }
+    // participant 1: no model override — runs on the agent's configured primary
+    { agent: "oracle", task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" }, context: "fresh" },
+    { agent: "oracle", model: "<additional-1>", task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" }, context: "fresh" },
+    { agent: "oracle", model: "<additional-2>", task: advisoryPreamble + "<the subject>", acceptance: { level: "none", reason: "advisory oracle council review; no file edits expected" }, context: "fresh" }
     // ...one task per distinct model in the pool
   ],
   concurrency: N
@@ -64,6 +69,6 @@ Gather all N oracle verdicts. Use the **diversity of independent perspectives to
 
 ## Notes
 
-- Each oracle runs with its default **forked** context, so every council member inherits the same parent-session decisions and constraints — only the model differs.
+- Each oracle runs with **fresh** context, never forked — every council member starts clean, seeing only the subject and preamble in its task; only the model differs. Forked context has failed in practice: a member echoed parent-session state back instead of answering the subject.
 - `model:` ids are lenient: case, separator variants (`-` vs `.`), and trailing date stamps all resolve to the same registry model.
 - If a model fails (provider, quota, or billing error), retry only that single task before reporting. Only surface a missing voice if that model has no working alternative.
